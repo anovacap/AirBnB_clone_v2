@@ -39,7 +39,7 @@ Ex:
 #### All
 `all` or `all <class name>`
 Ex:
-`all` or `all State`
+`all` or `all Stat  e` 
 
 #### Quit
 `quit` or `EOF`
