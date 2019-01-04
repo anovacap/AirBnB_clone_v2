@@ -56,5 +56,7 @@ Ex:
 
 #### Authors
 *Robert Glatzel* - [Github](https://github.com/robertglatzel) || [Twitter](https://twitter.com/rglatzell)
+
 *Damon Nyhan* - [Github](https://github.com/anovacap) || [Twitter](https://twitter.com/anovacap)
+
 *Kevin Yook* - [Github](https://github.com/yook00627)
