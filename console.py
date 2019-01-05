@@ -47,13 +47,17 @@ class HBNBCommand(cmd.Cmd):
             
             for val in my_list:
                 new_str = val.split("=")
-                #if key exists in obj.key or if its == to, update it.
                 if new_str[0] in dir(obj):
+<<<<<<< HEAD
                     strip_us = new_str[1].replace("_", " ")
                     # if strip_us.startswith('"') and strip_us.endswith('"'):
                     #    quote_less = strip_us[1:-1]
                     final_str = strip_us.replace('"', '\"')
                     setattr(obj, new_str[0], final_str)
+=======
+                    strip_underscore = new_str[1].replace("_", " ")
+                    setattr(obj, new_str[0], eval(strip_underscore))
+>>>>>>> 943e85883535fa5a0559084654b9eb78755e762e
                 obj.save()
             print("My List = {}".format(my_list))
             print("{}".format(obj.id))
