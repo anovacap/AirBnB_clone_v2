@@ -33,6 +33,7 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def do_create(self, line):
+        # expecting create User name="house" ...
         """Creates a new instance of BaseModel, saves it
         Exceptions:
             SyntaxError: when there is no args given
@@ -43,7 +44,13 @@ class HBNBCommand(cmd.Cmd):
                 raise SyntaxError()
             my_list = line.split(" ")
             obj = eval("{}()".format(my_list[0]))
-            obj.save()
+            
+            for val in my_list:
+                new_str = val.split("=")
+                if new_str[0] in dir(obj):
+                    strip_underscore = new_str[1].replace("_", " ")
+                    setattr(obj, new_str[0], eval(strip_underscore))
+                obj.save()
             print("{}".format(obj.id))
         except SyntaxError:
             print("** class name missing **")
