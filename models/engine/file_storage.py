@@ -27,10 +27,7 @@ class FileStorage:
         """
         for k, v in self.__objects.items():
             if cls.__name__ in k:
-                return "{} {}".format(k, v)
-#            print("This is cls: {}".format(cls))
-#            print("This is the key: {}".format(k))
-#            print("This is the value: {}".format(type(v)))
+                return v
 
     def new(self, obj):
         """sets __object to given obj
