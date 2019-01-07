@@ -3,7 +3,6 @@
 import unittest
 from unittest.mock import patch
 from io import StringIO
-import pep8
 import os
 import json
 import console
@@ -38,12 +37,6 @@ class TestConsole(unittest.TestCase):
             os.remove("file.json")
         except Exception:
             pass
-
-    def test_pep8_console(self):
-        """Pep8 console.py"""
-        style = pep8.StyleGuide(quiet=True)
-        p = style.check_files(["console.py"])
-        self.assertEqual(p.total_errors, 0, 'fix Pep8')
 
     def test_docstrings_in_console(self):
         """checking for docstrings"""
@@ -128,7 +121,7 @@ class TestConsole(unittest.TestCase):
                 "** no instance found **\n", f.getvalue())
 
     def test_all(self):
-        """Test all command inpout"""
+        """ Test all """
         with patch('sys.stdout', new=StringIO()) as f:
             self.consol.onecmd("all asdfsdfsd")
             self.assertEqual("** class doesn't exist **\n", f.getvalue())
@@ -231,6 +224,28 @@ class TestConsole(unittest.TestCase):
             self.consol.onecmd("User.update(" + my_id + ", name)")
             self.assertEqual(
                 "** value missing **\n", f.getvalue())
+
+    def test_new_create_param(self):
+        """ Create a Place with test as a param. """
+        with patch('sys.stdout', name=StringIO()) as f:
+            self.consol.onecmd('create Place name="testName"')
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd("all Place")
+            self.assertIn("testName", f.getvalue())
+
+        with patch('sys.stdout', name=StringIO()) as f:
+            self.consol.onecmd('create City fakeValue="testName"')
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd("all City")
+            self.assertNotIn("testName", f.getvalue())
+
+    def test_underscore_removal(self):
+        """ Test to ensure that underscores are replaced with spaces"""
+        with patch('sys.stdout', name=StringIO()) as f:
+            self.consol.onecmd('create Place name="underscore_test"')
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd("all Place")
+            self.assertIn("underscore test", f.getvalue())
 
 if __name__ == "__main__":
     unittest.main()

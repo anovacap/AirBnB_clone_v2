@@ -2,23 +2,34 @@
 """ Test delete feature
 """
 from models.engine.file_storage import FileStorage
-from models.place import Place
 from models.state import State
 
 fs = FileStorage()
 
 # All States
-print("All States: {}".format(fs.all(State)))
+all_states = fs.all(State)
+print("All States: {}".format(len(all_states.keys())))
+for state_key in all_states.keys():
+    print(all_states[state_key])
 
 # Create a new State
 new_state = State()
-new_state.name = "Texas"
+new_state.name = "California"
 fs.new(new_state)
-
-new_place = Place()
-new_place.name = "California"
-fs.new(new_place)
 fs.save()
+print("New State: {}".format(new_state))
 
 # All States
-print("All States: {}".format(fs.all(State)))
+all_states = fs.all(State)
+print("All States: {}".format(len(all_states.keys())))
+for state_key in all_states.keys():
+    print(all_states[state_key])
+
+# Delete the new State
+fs.delete(new_state)
+
+# All States
+all_states = fs.all(State)
+print("All States: {}".format(len(all_states.keys())))
+for state_key in all_states.keys():
+    print(all_states[state_key])
