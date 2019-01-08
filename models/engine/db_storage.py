@@ -8,10 +8,9 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 from sqlalchemy import (create_engine)
-from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 from os import getenv
-# from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import scoped_session
 
 
 class DBStorage():
@@ -21,15 +20,15 @@ class DBStorage():
 
     def __init__(self):
         usr = getenv("HBNB_MYSQL_USER")
-        hst = getenv("HBNB_MYSQL_PWD")
-        pswd = getenv("HBNB_MYSQL_HOST")
+        pswd = getenv("HBNB_MYSQL_PWD")
+        hst = getenv("HBNB_MYSQL_HOST")
         db = getenv("HBNB_MYSQL_DB")
 
-        self.__engine = create_engine("mysql+mysqldb://"
-                                      "{}:{}@{}/{}".format(usr, pswd, hst, db)
-                                      , pool_pre_ping=True)
-        if os.getenv(HBND_ENV) == 'test':
-            drop_all(self.__engine)
+        self.__engine = create_engine(
+            "mysql+mysqldb://{}:{}@{}/{}".format(
+                usr, pswd, hst, db, pool_pre_ping=True))
+        if getenv("HBND_ENV") == 'test':
+            Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """
@@ -37,19 +36,17 @@ class DBStorage():
         If it's empty, return all instances of valid classes.
         """
         all_dict = {}
-
+        classes = ['Places', 'State', 'Review', 'City', 'User', 'Amenity']
         if cls:
-            result = self.__session.query(cls).all()
+            result = self.__session.query(eval(cls).all())
             for item in result:
                 key = '{}.{}'.format(item.__class__.__name__, item.id)
                 all_dict[key] = item
             return all_dict
 
-        if cls == None:
-            classes = ['Places', 'State', 'Review', 'City', 'User', 'Amenity']
-
+        if cls is None:
             for x in classes:
-                result = self.session.query(x).all()
+                result = self.__session.query(x).all()
                 for item in result:
                     key = '{}.{}'.format(item.__class__.__name__, item.id)
                     all_dict[key] = item
@@ -75,4 +72,9 @@ class DBStorage():
         if obj is not None:
             self.__session.delete(obj)
 
-    # Need to add reload
+    def reload(self):
+        """Creates all tables in the database"""
+        Base.metadata.create_all(self.__engine)
+        ses_fact = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        Session = scoped_session(ses_fact)
+        self.__session = Session()
