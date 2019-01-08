@@ -30,7 +30,7 @@ class FileStorage:
         if cls is None:
             return self.__objects
 
-        if cls != "" and cls != None:
+        if cls is not "" and cls is not None:
             for k, v in self.__objects.items():
                 if cls.__name__ in k:
                     my_dict[k] = v
