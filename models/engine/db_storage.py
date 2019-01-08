@@ -27,6 +27,7 @@ class DBStorage():
         self.__engine = create_engine(
             "mysql+mysqldb://{}:{}@{}/{}".format(
                 usr, pswd, hst, db, pool_pre_ping=True))
+        Base.metadata.create_all(self.__engine)
         if getenv("HBND_ENV") == 'test':
             Base.metadata.drop_all(self.__engine)
 
@@ -36,28 +37,29 @@ class DBStorage():
         If it's empty, return all instances of valid classes.
         """
         all_dict = {}
-        classes = ['Places', 'State', 'Review', 'City', 'User', 'Amenity']
+        # classes = ['Places', 'State', 'Review', 'City', 'User', 'Amenity']
         if cls:
-            result = self.__session.query(eval(cls).all())
+            result = self.__session.query(eval(cls)).all()
             for item in result:
                 key = '{}.{}'.format(item.__class__.__name__, item.id)
                 all_dict[key] = item
-            return all_dict
-
-        if cls is None:
-            for x in classes:
+        else:
+            for x in Base.__subclasses__():
                 result = self.__session.query(x).all()
                 for item in result:
                     key = '{}.{}'.format(item.__class__.__name__, item.id)
                     all_dict[key] = item
-
-            return all_dict
+        return all_dict
 
     def new(self, obj):
         """
         Adds a new object to the database
         """
-        self.__session.add(obj)
+        if obj:
+            try:
+                self.__session.add(obj)
+            except:
+                pass
 
     def save(self):
         """
@@ -74,6 +76,7 @@ class DBStorage():
 
     def reload(self):
         """Creates all tables in the database"""
+        from models.base_model import Base
         Base.metadata.create_all(self.__engine)
         ses_fact = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(ses_fact)
