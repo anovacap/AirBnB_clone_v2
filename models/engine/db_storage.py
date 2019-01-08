@@ -8,7 +8,6 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 from sqlalchemy import (create_engine)
-from sqlalchemy import select, MetaData
 from sqlalchemy.orm import sessionmaker
 from os import getenv
 from sqlalchemy.orm import scoped_session
@@ -25,11 +24,11 @@ class DBStorage():
         hst = getenv("HBNB_MYSQL_HOST")
         db = getenv("HBNB_MYSQL_DB")
 
-        self.__engine = create_engine("mysql+mysqldb://"
-                                      "{}:{}@{}/{}".format(usr, pswd, hst, db),
-                                      pool_pre_ping=True)
-        if os.getenv("HBND_ENV") == 'test':
-            MetaData.drop_all(self.__engine)
+        self.__engine = create_engine(
+            "mysql+mysqldb://{}:{}@{}/{}".format(
+                usr, pswd, hst, db, pool_pre_ping=True))
+        if getenv("HBND_ENV") == 'test':
+            Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """
