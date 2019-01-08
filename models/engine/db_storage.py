@@ -10,6 +10,7 @@ from models.review import Review
 from sqlalchemy import (create_engine)
 from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
+from os import getenv
 # from sqlalchemy.orm import scoped_session
 
 
@@ -19,11 +20,11 @@ class DBStorage():
     __engine = None
 
     def __init__(self):
-        usr = os.getenv(HBNB_MYSQL_USER)
-        hst = os.getenv(HBNB_MYSQL_PWD)
-        pswd = os.getenv(HBNB_MYSQL_HOST)
-        db = os.getenv(HBNB_MYSQL_DB)
-        
+        usr = getenv("HBNB_MYSQL_USER")
+        hst = getenv("HBNB_MYSQL_PWD")
+        pswd = getenv("HBNB_MYSQL_HOST")
+        db = getenv("HBNB_MYSQL_DB")
+
         self.__engine = create_engine("mysql+mysqldb://"
                                       "{}:{}@{}/{}".format(usr, pswd, hst, db)
                                       , pool_pre_ping=True)
@@ -31,7 +32,47 @@ class DBStorage():
             drop_all(self.__engine)
 
     def all(self, cls=None):
+        """
+        Returns all instances of a class if the class name is passed.
+        If it's empty, return all instances of valid classes.
+        """
         all_dict = {}
+
         if cls:
-            for request in self.__session(cls).order_by.all():
-                all_dict[request.name] = request.id
+            result = self.__session.query(cls).all()
+            for item in result:
+                key = '{}.{}'.format(item.__class__.__name__, item.id)
+                all_dict[key] = item
+            return all_dict
+
+        if cls == None:
+            classes = ['Places', 'State', 'Review', 'City', 'User', 'Amenity']
+
+            for x in classes:
+                result = self.session.query(x).all()
+                for item in result:
+                    key = '{}.{}'.format(item.__class__.__name__, item.id)
+                    all_dict[key] = item
+
+            return all_dict
+
+    def new(self, obj):
+        """
+        Adds a new object to the database
+        """
+        self.__session.add(obj)
+
+    def save(self):
+        """
+        Saves whatever changes have not yet been committed to the database
+        """
+        self.__session.commit()
+
+    def delete(self, obj=None):
+        """
+        Deletes and object if obj is not none.
+        """
+        if obj is not None:
+            self.__session.delete(obj)
+
+    # Need to add reload
