@@ -5,10 +5,9 @@ from os import getenv
 from sqlalchemy import Column, Integer, String, ForeignKey, Float
 from sqlalchemy.orm import relationship
 import models
-
+from models.review import Review
 
 class Place(BaseModel, Base):
-    print("HHHHHHHH")
     """This is the class for Place
     Attributes:
         city_id: city id
@@ -56,7 +55,7 @@ class Place(BaseModel, Base):
     def reviews(self):
         """func reviews getter"""
         review_list = []
-        print("HELLLLLO")
-        rev = models.storage.all().values()
-        print("Reviews = {}".format(rev))
+        for rev in models.storage.all(Review).values():
+            if rev.place_id == self.id:
+                review_list.append(rev)
         return review_list
