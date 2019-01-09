@@ -58,7 +58,7 @@ class DBStorage():
         if obj:
             try:
                 self.__session.add(obj)
-            except:
+            except BaseException:
                 pass
 
     def save(self):

@@ -7,6 +7,7 @@ from sqlalchemy.orm import relationship
 import models
 from models.review import Review
 
+
 class Place(BaseModel, Base):
     """This is the class for Place
     Attributes:
