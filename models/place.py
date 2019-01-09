@@ -4,7 +4,7 @@ from models.base_model import BaseModel, Base
 from os import getenv
 from sqlalchemy import Column, Integer, String, ForeignKey, Float
 from sqlalchemy.orm import relationship
-# from models.engine.db_storage import DBStorage
+import models
 
 
 class Place(BaseModel, Base):
@@ -57,6 +57,6 @@ class Place(BaseModel, Base):
         """func reviews getter"""
         review_list = []
         print("HELLLLLO")
-        rev = all('Reviews').value()
+        rev = models.storage.all()
         print("Reviews = {}".format(rev))
         return review_list
