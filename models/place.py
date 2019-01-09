@@ -3,6 +3,9 @@
 from models.base_model import BaseModel, Base
 from os import getenv
 from sqlalchemy import Column, Integer, String, ForeignKey, Float
+from sqlalchemy.orm import relationship
+import models
+from models.review import Review
 
 class Place(BaseModel, Base):
     """This is the class for Place
@@ -31,10 +34,8 @@ class Place(BaseModel, Base):
         price_by_night = Column(Integer, default=0, nullable=False)
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
-        # Return to number 8 - Must update relationships
-        #
-        #
-        #
+        reviews = relationship('Review', backref='place',
+                               cascade="all, delete, delete-orphan")
         amenity_ids = []
 
     else:
@@ -49,3 +50,12 @@ class Place(BaseModel, Base):
         latitude = 0.0
         longitude = 0.0
         amenity_ids = []
+
+    @property
+    def reviews(self):
+        """func reviews getter"""
+        review_list = []
+        for rev in models.storage.all(Review).values():
+            if rev.place_id == self.id:
+                review_list.append(rev)
+        return review_list
