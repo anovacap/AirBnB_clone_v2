@@ -28,7 +28,7 @@ class DBStorage():
             "mysql+mysqldb://{}:{}@{}/{}".format(
                 usr, pswd, hst, db, pool_pre_ping=True))
         Base.metadata.create_all(self.__engine)
-        if getenv("HBND_ENV") == 'test':
+        if getenv("HBNB_ENV") == 'test':
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
