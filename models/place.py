@@ -3,6 +3,8 @@
 from models.base_model import BaseModel, Base
 from os import getenv
 from sqlalchemy import Column, Integer, String, ForeignKey, Float
+from sqlalchemy.orm import relationship
+
 
 class Place(BaseModel, Base):
     """This is the class for Place
@@ -31,10 +33,8 @@ class Place(BaseModel, Base):
         price_by_night = Column(Integer, default=0, nullable=False)
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
-        # Return to number 8 - Must update relationships
-        #
-        #
-        #
+        reviews = relationship('Review', backref='place',
+                               cascade="all, delete, delete-orphan")
         amenity_ids = []
 
     else:
