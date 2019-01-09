@@ -4,9 +4,11 @@ from models.base_model import BaseModel, Base
 from os import getenv
 from sqlalchemy import Column, Integer, String, ForeignKey, Float
 from sqlalchemy.orm import relationship
+import models
 
 
 class Place(BaseModel, Base):
+    print("HHHHHHHH")
     """This is the class for Place
     Attributes:
         city_id: city id
@@ -49,3 +51,12 @@ class Place(BaseModel, Base):
         latitude = 0.0
         longitude = 0.0
         amenity_ids = []
+
+    @property
+    def reviews(self):
+        """func reviews getter"""
+        review_list = []
+        print("HELLLLLO")
+        rev = models.storage.all().values()
+        print("Reviews = {}".format(rev))
+        return review_list
