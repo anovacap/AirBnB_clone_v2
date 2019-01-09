@@ -3,8 +3,10 @@
 from models.base_model import BaseModel, Base
 from os import getenv
 from sqlalchemy import Column, Integer, String, ForeignKey, Float
+from sqlalchemy.orm import relationship
 
-class Review(BaseModel):
+
+class Review(BaseModel, Base):
     """This is the class for Review
     Attributes:
         place_id: place id
@@ -16,8 +18,7 @@ class Review(BaseModel):
         text = Column(String(1024), nullable=False)
         place_id = Column(String(60), ForeignKey('places.id'), nullable=False)
         user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
-        # Need to update relationships. come back to number 9.
-
+        
     else:
         place_id = ""
         user_id = ""
