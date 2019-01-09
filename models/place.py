@@ -57,6 +57,6 @@ class Place(BaseModel, Base):
         """func reviews getter"""
         review_list = []
         print("HELLLLLO")
-        rev = models.storage.all()
+        rev = models.storage.all().values()
         print("Reviews = {}".format(rev))
         return review_list
