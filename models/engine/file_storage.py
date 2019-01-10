@@ -30,14 +30,11 @@ class FileStorage:
         if cls is None:
             return self.__objects
 
-        if cls != "":
+        else cls:
             for k, v in self.__objects.items():
                 if cls.__name__ in k:
                     my_dict[k] = v
             return my_dict
-
-        else:
-            return self.__objects
 
     def new(self, obj):
         """sets __object to given obj
@@ -72,9 +69,8 @@ class FileStorage:
         """
         Deletes an obj from __objects if it exists
         """
-        obj_str = "{}.{}".format(type(obj).__name__, obj.id)
-
         if obj is not None:
+            obj_str = "{}.{}".format(type(obj).__name__, obj.id)
             if obj_str in self.__objects.keys():
                 del self.__objects[obj_str]
-        self.save()
+                self.save()
