@@ -33,6 +33,7 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def do_create(self, line):
+        # expecting create User name="house" ...
         """Creates a new instance of BaseModel, saves it
         Exceptions:
             SyntaxError: when there is no args given
@@ -43,11 +44,26 @@ class HBNBCommand(cmd.Cmd):
                 raise SyntaxError()
             my_list = line.split(" ")
             obj = eval("{}()".format(my_list[0]))
+            for val in my_list:
+                try:
+                    new_str = val.split("=")
+                    if new_str[0] in dir(obj):
+                        strip_underscore = new_str[1].replace("_", " ")
+                        try:
+                            setattr(obj, new_str[0], eval(strip_underscore))
+                        except BaseException:
+                            pass
+                except BaseException:
+                    pass
+
             obj.save()
             print("{}".format(obj.id))
+
         except SyntaxError:
             print("** class name missing **")
         except NameError:
+            print("** class doesn't exist **")
+        except BaseException:
             print("** class doesn't exist **")
 
     def do_show(self, line):
@@ -210,15 +226,15 @@ class HBNBCommand(cmd.Cmd):
         new_list.append(args[0])
         try:
             my_dict = eval(
-                args[1][args[1].find('{'):args[1].find('}')+1])
+                args[1][args[1].find('{'):args[1].find('}') + 1])
         except Exception:
             my_dict = None
         if isinstance(my_dict, dict):
-            new_str = args[1][args[1].find('(')+1:args[1].find(')')]
+            new_str = args[1][args[1].find('(') + 1:args[1].find(')')]
             new_list.append(((new_str.split(", "))[0]).strip('"'))
             new_list.append(my_dict)
             return new_list
-        new_str = args[1][args[1].find('(')+1:args[1].find(')')]
+        new_str = args[1][args[1].find('(') + 1:args[1].find(')')]
         new_list.append(" ".join(new_str.split(", ")))
         return " ".join(i for i in new_list)
 
