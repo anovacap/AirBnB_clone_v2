@@ -74,6 +74,7 @@ class FileStorage:
         """
         obj_str = "{}.{}".format(type(obj).__name__, obj.id)
 
-        if obj_str in self.__objects.keys():
-            del self.__objects[obj_str]
-            self.save()
+        if obj is not None:
+            if obj_str in self.__objects.keys():
+                del self.__objects[obj_str]
+        self.save()
