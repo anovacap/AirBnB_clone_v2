@@ -129,7 +129,7 @@ class TestFileStorage(unittest.TestCase):
 
         ret_val = fs.all(State)
 
-        self.assertTrue(type(ret_val) == dict)
+        self.assertTrue(isinstance(ret_val, dict))
 
         flag = 0
 
@@ -139,6 +139,7 @@ class TestFileStorage(unittest.TestCase):
                     flag += 1
 
         self.assertTrue(flag == 2)
+
 
 if __name__ == "__main__":
     unittest.main()
