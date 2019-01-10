@@ -31,13 +31,6 @@ class TestFileStorage(unittest.TestCase):
         """at the end of the test this will tear it down"""
         del cls.user
 
-    def tearDown(self):
-        """teardown"""
-        try:
-            os.remove("file.json")
-        except Exception:
-            pass
-
     def test_pep8_FileStorage(self):
         """Tests pep8 style"""
         style = pep8.StyleGuide(quiet=True)
@@ -74,7 +67,7 @@ class TestFileStorage(unittest.TestCase):
             lines = f.readlines()
         try:
             os.remove(path)
-        except:
+        except BaseException:
             pass
         self.storage.save()
         with open(path, 'r') as f:
@@ -82,7 +75,7 @@ class TestFileStorage(unittest.TestCase):
         self.assertEqual(lines, lines2)
         try:
             os.remove(path)
-        except:
+        except BaseException:
             pass
         with open(path, "w") as f:
             f.write("{}")
@@ -91,6 +84,62 @@ class TestFileStorage(unittest.TestCase):
                 self.assertEqual(line, "{}")
         self.assertIs(self.storage.reload(), None)
 
+    def test_delete(self):
+        """ Test the delete function in file storage by creating a new State,
+        checking the contents of file.json to confirm it's there, then running
+        delete and checking the file again """
+
+        new_state = State()
+        fs = FileStorage()
+        fs.new(new_state)
+        fs.save()
+        self.assertTrue(os.path.isfile("file.json"))
+        with open("file.json", 'r') as f:
+            file_read = f.read()
+
+        if new_state.id in file_read:
+            flag = 1
+
+        fs.delete(new_state)
+        fs.save()
+
+        with open("file.json", 'r') as f:
+            file_read = f.read()
+
+        if new_state.id not in file_read:
+            flag = 0
+
+        self.assertTrue(flag == 0)
+
+    def test_all_with_value(self):
+        """ Testing the updated version of all, where you pass a value
+        in, and get a list of all objects that match that value. """
+
+        fs = FileStorage()
+        self.assertTrue(os.path.isfile("file.json"))
+        new_s1 = State()
+        new_s2 = State()
+        fs.new(new_s1)
+        fs.new(new_s2)
+        fs.save()
+
+        state_id1 = new_s1.id
+        state_id2 = new_s2.id
+
+        state_list = [state_id1, state_id2]
+
+        ret_val = fs.all(State)
+
+        self.assertTrue(type(ret_val) == dict)
+
+        flag = 0
+
+        for x in ret_val:
+            for s in state_list:
+                if s in x:
+                    flag += 1
+
+        self.assertTrue(flag == 2)
 
 if __name__ == "__main__":
     unittest.main()
