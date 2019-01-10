@@ -21,11 +21,12 @@ class User(BaseModel, Base):
     if getenv("HBNB_TYPE_STORAGE") == "db":
         email = Column(String(128), nullable=False)
         password = Column(String(128), nullable=False)
-        first_name = Column(String(128), nullable=False)
-        last_name = Column(String(128), nullable=False)
-        reviews = relationship('Review', backref="user",
-                               cascade="all, delete, delete-orphan")
-        places = relationship('Place', backref='user', cascade="all, delete, delete-orphan")
+        first_name = Column(String(128), nullable=True)
+        last_name = Column(String(128), nullable=True)
+        reviews = relationship('Review', cascade="all, delete, delete-orphan",
+                               backref="user")
+        places = relationship('Place', cascade="all, delete, delete-orphan",
+                              backref='user')
 
     else:
         email = ""
