@@ -3,7 +3,7 @@
 import models
 from models.base_model import BaseModel, Base
 from sqlalchemy import String, Column, Integer, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from os import getenv
 import models
 from models.city import City
