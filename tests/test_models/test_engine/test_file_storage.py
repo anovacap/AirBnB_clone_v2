@@ -116,7 +116,6 @@ class TestFileStorage(unittest.TestCase):
         in, and get a list of all objects that match that value. """
 
         fs = FileStorage()
-        self.assertTrue(os.path.isfile("file.json"))
         new_s1 = State()
         new_s2 = State()
         fs.new(new_s1)
