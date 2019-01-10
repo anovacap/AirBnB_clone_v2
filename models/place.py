@@ -76,7 +76,7 @@ class Place(BaseModel, Base):
         def amenities(self):
             """func cities getter"""
             amen_list = []
-            for amenity in models.storage.all(models.Amenity).values():
+            for amenity in models.storage.all(Amenity).values():
                 if amenity.id == self.id:
                     amen_list.append(amenity)
             return amen_list
@@ -84,5 +84,5 @@ class Place(BaseModel, Base):
         @amenities.setter
         def amenities(self, obj):
             """ Adds the amenity to the amenity_ids list"""
-            if isinstance(obj, models.Amenity):
+            if isinstance(obj, Amenity):
                 self.amenity_ids.append(obj.id)
