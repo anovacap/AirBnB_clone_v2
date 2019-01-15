@@ -3,7 +3,6 @@
  contents of the web_static"""
 from fabric.api import local
 from time import strftime
-import os
 
 
 def do_pack():
