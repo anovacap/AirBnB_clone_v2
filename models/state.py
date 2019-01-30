@@ -22,11 +22,12 @@ class State(BaseModel, Base):
     else:
         name = ""
 
-    @property
-    def cities(self):
-        """func cities getter"""
-        citi_list = []
-        for citi in models.storage.all(City).values():
-            if citi.state_id == self.id:
-                citi_list.append(citi)
-        return citi_list
+    if getenv('HBNB_TYPE_STORAGE') == 'fs':
+        @property
+        def cities(self):
+            """func cities getter"""
+            citi_list = []
+            for citi in models.storage.all(City).values():
+                if citi.state_id == self.id:
+                    citi_list.append(citi)
+            return citi_list
