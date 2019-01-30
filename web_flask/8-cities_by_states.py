@@ -3,6 +3,7 @@
 from models import storage
 from flask import Flask, render_template
 app = Flask(__name__)
+app.jinja_env.lstrip_blocks = True
 
 
 @app.route('/states_list', strict_slashes=False)
